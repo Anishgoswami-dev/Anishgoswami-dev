@@ -1,4 +1,4 @@
-<h2 align="left">Hi 👋! My name is Anish Goswami and I'm a python & AI Developer ..., from ....</h2>
+<h2 align="left">Hi 👋! My name is Anish Goswami and I'm a python & AI Developer ..., from India....</h2>
 
 ###
 
