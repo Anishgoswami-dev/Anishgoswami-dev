@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anish Goswami · GitHub Profile Preview</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.1/github-markdown.min.css">
+  <style>
+    :root {
+      --bg-color: #0d1117;
+      --card-bg: #161b22;
+      --border-color: #30363d;
+      --text-color: #e6edf3;
+      --accent: #22d3ee;
+    }
+    html[data-theme="light"] {
+      --bg-color: #f6f8fa;
+      --card-bg: #ffffff;
+      --border-color: #d0d7de;
+      --text-color: #1f2328;
+      --accent: #0969da;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+      transition: background 0.25s, color 0.25s;
+    }
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 24px;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border-color);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    .brand {
+      font-weight: 700;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .badge {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: rgba(34, 211, 238, 0.15);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .btn {
+      padding: 7px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      background: var(--bg-color);
+      color: var(--text-color);
+      transition: all 0.2s;
+    }
+    .btn:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #0d1117;
+      border: none;
+    }
+    .preview-container {
+      max-width: 980px;
+      margin: 32px auto;
+      padding: 24px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+    }
+    .markdown-body {
+      background: transparent !important;
+      color: inherit !important;
+    }
+    .markdown-body table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 12px;
+      margin: 16px 0;
+    }
+    .markdown-body table td, .markdown-body table th {
+      border: none !important;
+      background: transparent !important;
+      padding: 0 !important;
+    }
+    .markdown-body img {
+      max-width: 100%;
+      background: transparent;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <div class="brand">
+      <svg height="24" viewBox="0 0 16 16" width="24" fill="currentColor">
+        <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path>
+      </svg>
+      <span>Anishgoswami-dev / README.md</span>
+      <span class="badge">Live Preview</span>
+    </div>
+    <div class="actions">
+      <button class="btn" id="themeToggle" onclick="toggleTheme()">☀️ Light Mode</button>
+      <a class="btn btn-primary" href="https://github.com/Anishgoswami-dev" target="_blank">View GitHub Profile ↗</a>
+    </div>
+  </div>
+
+  <div class="preview-container">
+    <article class="markdown-body" id="content">
+      <!-- README CONTENT INJECTED HERE -->
+    </article>
+  </div>
+
+  <script>
+    async function loadReadme() {
+      try {
+        const res = await fetch('README.md');
+        const text = await res.text();
+        document.getElementById('content').innerHTML = text;
+        updatePictureSources();
+      } catch (err) {
+        document.getElementById('content').innerHTML = '<p>Error loading README.md: ' + err + '</p>';
+      }
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const btn = document.getElementById('themeToggle');
+      if (html.getAttribute('data-theme') === 'dark') {
+        html.setAttribute('data-theme', 'light');
+        btn.textContent = '🌙 Dark Mode';
+      } else {
+        html.setAttribute('data-theme', 'dark');
+        btn.textContent = '☀️ Light Mode';
+      }
+      updatePictureSources();
+    }
+
+    function updatePictureSources() {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.querySelectorAll('picture').forEach(pic => {
+        const sources = pic.querySelectorAll('source');
+        const img = pic.querySelector('img');
+        sources.forEach(src => {
+          const media = src.getAttribute('media') || '';
+          if (isDark && media.includes('dark')) {
+            if (img) img.src = src.getAttribute('srcset');
+          } else if (!isDark && media.includes('light')) {
+            if (img) img.src = src.getAttribute('srcset');
+          }
+        });
+      });
+    }
+
+    loadReadme();
+  </script>
+</body>
+</html>

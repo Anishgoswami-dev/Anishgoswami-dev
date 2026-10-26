@@ -1,0 +1,52 @@
+"""Write the live IST time-of-day greeting SVGs (assets/live/greeting-{dark,light}.svg)."""
+from __future__ import annotations
+import datetime as dt
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent))
+from poster.common import MODES, OUT, write  # noqa: E402
+from poster.hero import greeting_svg  # noqa: E402
+
+IST = dt.timezone(dt.timedelta(hours=5, minutes=30), "IST")  # India has no DST
+
+
+def greeting(now: dt.datetime) -> tuple[str, str]:
+    """(text, scene) for the given moment, in Indian Standard Time.
+
+    scene is one of morning / afternoon / evening / night / saturday / sunday; the weekend
+    replaces the daytime scenes (05:00 to 22:00 IST), nights stay nights."""
+    t = now.astimezone(IST)
+    h = t.hour
+    if 5 <= h < 22 and t.weekday() == 5:
+        return "Saturday in Kolkata. Anish is probably building an AI model or web app just for fun", "saturday"
+    if 5 <= h < 22 and t.weekday() == 6:
+        return "Sunday in Kolkata. Anish is probably exploring new tech and planning the week", "sunday"
+    if 5 <= h < 12:
+        return "Good morning from Kolkata. Anish is probably heading to lectures at MSIT", "morning"
+    if 12 <= h < 17:
+        return "Good afternoon from Kolkata. Anish is probably between lectures and side projects", "afternoon"
+    if 17 <= h < 22:
+        return "Good evening from Kolkata. Anish is probably training models or shipping code", "evening"
+    return "Night in Kolkata. Anish is probably deep in coding and debugging", "night"
+
+
+def slot(now: dt.datetime) -> str:
+    """Time-of-day slot in IST: morning 05-12, afternoon 12-17, evening 17-22, night 22-05."""
+    h = now.astimezone(IST).hour
+    return "morning" if 5 <= h < 12 else "afternoon" if 12 <= h < 17 else "evening" if 17 <= h < 22 else "night"
+
+
+def stamp(now: dt.datetime) -> str:
+    return "Last auto-updated: " + now.astimezone(IST).strftime("%Y-%m-%d %H:%M IST")
+
+
+def main() -> None:
+    now = dt.datetime.now(dt.timezone.utc)
+    text, scene = greeting(now)
+    for m in MODES:
+        write(OUT / "live" / f"greeting-{m}.svg", greeting_svg(m, text, stamp(now), scene, slot(now)))
+
+
+if __name__ == "__main__":
+    main()
